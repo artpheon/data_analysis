@@ -1,0 +1,132 @@
+Indexing and Slicing Tables with Pandas
+ 
+#Note: columns have column labels; rows have index labels
+ 
+ 
+#Label-based slicing
+ 
+djson = pandas.read_json("D:\\sample_data\\Employees.json")
+ 
+#Returning the table entry at index label 5
+djson.loc[5]
+ 
+#Returning the table entries at index labels 2, 4 and 7
+djson.loc[[2,4,7]]
+ 
+#Returning the table entries at index labels in the range 3:5, meaning labels 3, 4 and 5
+djson.loc[3:5]
+ 
+#Returning only the specified columns (after the comma) for the index label range (before the comma)
+djson.loc[0:2,["Phone","Skills"]]
+ 
+#Returning only the specified column range (after the comma) for the index label range (before the comma)
+djson.loc[0:2,"Phone":"Skills"]
+ 
+#The index change is made in place, meaning the DataFrame itself gets updated with the "Address" column as index, instead of the default index labels
+djson.set_index("Address", inplace = True)
+ 
+#Returning only the (full) rows associated with the specified range of values of the Address
+djson.loc["1st Address, Miami":"5th Address, Miami"]
+ 
+#Returning the Phone column associated with the specified range of values of the Address
+djson.loc["1st Address, Miami":"5th Address, Miami", "Phone"]
+ 
+#Returning multiple columns associated with the specified range of values of the Address
+djson.loc["1st Address, Miami":"5th Address, Miami", ["LastName","Skills"]]
+ 
+#Returning a range of columns associated with the specified range of values of the Address
+djson.loc["1st Address, Miami":"5th Address, Miami", "LastName":"Skills"]
+ 
+#Returning a single column for a single Address
+djson.loc["1st Address, Miami", "Phone"]
+ 
+#Returning the Phone value for all the table entries
+djson.loc[:, "Phone"]
+ 
+#Returning the full, original table/DataFrame
+djson.loc[:]
+djson.loc[:,:]
+ 
+#Returning all the (unique) departments in the table
+djson.loc[:,"Department"]
+set(djson.loc[:,"Department"])
+ 
+ 
+ 
+#Position-based slicing
+#With the iloc() method the slicing is done the Python way, meaning the second index (the one after the colon) will not be included in the slice.
+ 
+djson = pandas.read_json("D:\\sample_data\\Employees.json")
+               Address Department FirstName  ID  LastName       Phone  Salary           Skills
+0   1st Address, Miami      Sales      Luke   1   Phillip  1234567890   52000     Online Sales
+1   2nd Address, Miami         IT      Jack   2    Darren  1234567891   52200       Networking
+2   3rd Address, Miami         IT       Ken   3      Wood  1234567892   58000     Python, Java
+3   4th Address, Miami  Marketing      John   4    Wilson  1234567893   58700     Facebook Ads
+4   5th Address, Miami  Marketing     Emily   5    Larson  1234567894   60000    Instagram Ads
+5   6th Address, Miami      Sales      Anna   6  Sullivan  1234567895   54000  In-Person Sales
+6   7th Address, Miami  Logistics   Richard   7     Smith  1234567896   56000  Warehouse Mgmt.
+7   8th Address, Miami      Sales    Ronnie   8     Moore  1234567897   49000     Online Sales
+8   9th Address, Miami         IT      Test   9     Drake  1234567898   53000    Linux Servers
+9  10th Address, Miami  Logistics     Wayne  10    Barker  1234567899   59500  Product Loading
+ 
+#Returning the entry/row at index 4, where indexing starts at 0
+djson.iloc[4]
+ 
+#Returning the entries/rows at indexes 4, 6 and 8, where indexing starts at 0
+djson.iloc[[4, 6, 8]]
+ 
+#Returning the entries/rows at indexes 2, 3 and 4; index 5 is the upper limit and it isn't included in the slice
+djson.iloc[2:5]
+ 
+#Returning the columns at indexes 2, 3, and 4 for the entry/row at index 2; index 5 is the upper limit and it isn't included in the slice
+djson.iloc[2,2:5]
+ 
+#Returning the columns at indexes 2, 3, and 4 for all the entries/rows in the table; index 5 is the upper limit and it isn't included in the slice
+djson.iloc[:,2:5]
+ 
+#Returning the full, original table/DataFrame
+djson.iloc[:]
+djson.iloc[:,:]
+ 
+ 
+ 
+#Selecting random samples from the DataFrame
+ 
+#Returning random samples, one at a time
+djson.sample()
+djson.sample()
+djson.sample()
+ 
+#Returning random samples, 4 at a time
+djson.sample(n = 4)
+djson.sample(n = 4)
+djson.sample(n = 4)
+ 
+#Returning a fraction of the items. Cannot be used with 'n'
+djson.sample(frac = 0.5)   #returns half of the records, randomly
+ 
+djson.sample(frac = 0.2)   #returns 1/5th of the records, randomly
+ 
+ 
+ 
+#Boolean indexing - filtering data
+#Operators are | for OR, & for AND, and ~ for NOT. Must be grouped by using parentheses
+ 
+#Setting the ID column as index
+djson.set_index("ID", inplace = True)
+ 
+#Returning all the entries/rows with a salary less than 50000
+djson[djson.loc[:, "Salary"] < 50000]
+ 
+#Returning all the entries/rows with a salary less than 50000 OR greater than 56000
+djson[(djson.loc[:, "Salary"] < 50000) | (djson.loc[:, "Salary"] >= 56000)]
+ 
+#Returning all the entries/rows with a salary greater than 50000 AND from the Sales department
+djson[(djson.loc[:, "Salary"] > 50000) & (djson.loc[:, "Department"] == "Sales")]
+ 
+#Returning all the entries/rows/employees who are not in the IT department
+djson[~(djson.loc[:, "Department"] == "IT")]
+ 
+ 
+More information:
+https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html
