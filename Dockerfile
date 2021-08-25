@@ -1,5 +1,5 @@
 #image name
-FROM debian:latest
+FROM ubuntu:latest
 
 LABEL name="Artur N."
 LABEL maintainer="idcdtokms@gmail.com"
@@ -13,14 +13,14 @@ RUN apt-get update && \
     sudo apt-get -y install python3.8 python3-venv python3-pip python3-dev libpq-dev postgresql postgresql-contrib && \
     export PATH=$PATH:/usr/lib/postgresql/12/bin && \
     pip install --upgrade pip && \
-    pip3 install psycopg2 sqlalchemy
+    pip3 install openpyxl pandas psycopg2 sqlalchemy
 
 # sudo service postgresql start
 # then run 'sudo -u postgres -i' to get into databases
 # or sudo -u postgres psql database-name
 WORKDIR /var/www/hrobbin
 
-COPY ./app/* /var/www/hrobbin
+COPY ./app/* /var/www/hrobbin/
 
 RUN chmod 777 /var/www/hrobbin
 
